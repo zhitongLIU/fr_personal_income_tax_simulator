@@ -95,6 +95,45 @@ Formule : Décote = Plafond - (0.75 × Impôt)
 - Vite
 - CSS3
 
+## Déploiement sur GitHub Pages
+
+Le projet est configuré pour être déployé automatiquement sur GitHub Pages via GitHub Actions.
+
+### Configuration automatique
+
+1. **Pousser le code sur GitHub** :
+   ```bash
+   git add .
+   git commit -m "Initial commit"
+   git remote add origin https://github.com/VOTRE-USERNAME/tax_simulator.git
+   git push -u origin main
+   ```
+
+2. **Activer GitHub Pages** :
+   - Allez dans Settings → Pages de votre repository
+   - Source : sélectionnez "GitHub Actions"
+   - Le site sera automatiquement déployé à chaque push sur la branche `main`
+
+3. **URL du site** :
+   - Le site sera disponible à : `https://VOTRE-USERNAME.github.io/tax_simulator/`
+
+### Important : Configuration du base path
+
+Si votre repository GitHub a un nom différent de `tax_simulator`, vous devez modifier le `base` dans `vite.config.js` :
+
+```javascript
+base: '/NOM-DE-VOTRE-REPO/', // Remplacez par le nom de votre repo
+```
+
+### Déploiement manuel (optionnel)
+
+Si vous préférez déployer manuellement :
+
+```bash
+npm install --save-dev gh-pages
+npm run deploy
+```
+
 ## Sources
 
 - [Ministère de l'Économie et des Finances](https://www.economie.gouv.fr)
