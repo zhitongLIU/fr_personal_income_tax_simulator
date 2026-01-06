@@ -3,13 +3,14 @@ import { YearSelector } from './components/YearSelector';
 import { TaxForm } from './components/TaxForm';
 import { TaxResults } from './components/TaxResults';
 import { calculateFinalTax } from './services/taxCalculator';
+import type { TaxYear, TaxCalculationResult, TaxCalculationParams } from './types';
 import './App.css';
 
 function App() {
-  const [year, setYear] = useState(2025);
-  const [results, setResults] = useState(null);
+  const [year, setYear] = useState<TaxYear>(2025);
+  const [results, setResults] = useState<TaxCalculationResult | null>(null);
 
-  const handleCalculate = (formData) => {
+  const handleCalculate = (formData: TaxCalculationParams) => {
     const taxResults = calculateFinalTax(formData);
     setResults(taxResults);
   };
@@ -44,3 +45,4 @@ function App() {
 }
 
 export default App;
+

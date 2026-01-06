@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import type { TaxCalculationResult } from '../types';
 import './TaxResults.css';
 
-export function TaxResults({ results }) {
+interface TaxResultsProps {
+  results: TaxCalculationResult | null;
+}
+
+export function TaxResults({ results }: TaxResultsProps) {
   const [showBracketDetails, setShowBracketDetails] = useState(false);
   const [showPartsCalc, setShowPartsCalc] = useState(false);
   const [showQuotientCalc, setShowQuotientCalc] = useState(false);
@@ -13,7 +18,7 @@ export function TaxResults({ results }) {
     return null;
   }
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: 'EUR',
@@ -236,7 +241,7 @@ export function TaxResults({ results }) {
                     </tr>
                   ))}
                   <tr className="bracket-total">
-                    <td colSpan="3"><strong>Total impôt sur le quotient :</strong></td>
+                    <td colSpan={3}><strong>Total impôt sur le quotient :</strong></td>
                     <td><strong>{formatCurrency(results.baseTax)}</strong></td>
                   </tr>
                 </tbody>

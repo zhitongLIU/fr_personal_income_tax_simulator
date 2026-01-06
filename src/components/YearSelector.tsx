@@ -1,11 +1,16 @@
-import React from 'react';
-import { taxBrackets } from '../data/taxBrackets.js';
+import { taxBrackets } from '../data/taxBrackets';
+import type { TaxYear } from '../types';
 import './YearSelector.css';
 
-export function YearSelector({ year, onYearChange }) {
+interface YearSelectorProps {
+  year: TaxYear;
+  onYearChange: (year: TaxYear) => void;
+}
+
+export function YearSelector({ year, onYearChange }: YearSelectorProps) {
   const brackets = taxBrackets[year];
   
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount: number): string => {
     if (amount === Infinity) return '∞';
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
@@ -21,7 +26,7 @@ export function YearSelector({ year, onYearChange }) {
       <select 
         id="tax-year"
         value={year} 
-        onChange={(e) => onYearChange(parseInt(e.target.value))}
+        onChange={(e) => onYearChange(parseInt(e.target.value) as TaxYear)}
         className="year-select"
       >
         <option value={2025}>2025 (revenus 2024)</option>

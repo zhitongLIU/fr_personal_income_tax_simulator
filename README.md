@@ -92,6 +92,7 @@ Formule : Décote = Plafond - (0.75 × Impôt)
 ## Technologies
 
 - React 19
+- TypeScript
 - Vite
 - CSS3
 

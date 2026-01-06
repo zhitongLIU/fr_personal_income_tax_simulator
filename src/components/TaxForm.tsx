@@ -1,8 +1,22 @@
-import React, { useState } from 'react';
+import { useState, FormEvent, ChangeEvent, FocusEvent } from 'react';
+import type { TaxYear, MaritalStatus, TaxCalculationParams } from '../types';
 import './TaxForm.css';
 
-export function TaxForm({ onSubmit, year }) {
-  const [formData, setFormData] = useState({
+interface TaxFormProps {
+  onSubmit: (data: TaxCalculationParams) => void;
+  year: TaxYear;
+}
+
+interface FormData {
+  netIncome: string;
+  maritalStatus: MaritalStatus;
+  numberOfChildren: string;
+  deductions: string;
+  taxReductions: string;
+}
+
+export function TaxForm({ onSubmit, year }: TaxFormProps) {
+  const [formData, setFormData] = useState<FormData>({
     netIncome: '',
     maritalStatus: 'single',
     numberOfChildren: '',
@@ -10,13 +24,13 @@ export function TaxForm({ onSubmit, year }) {
     taxReductions: ''
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     
     // Pour les champs numériques, on garde la valeur comme string pour permettre la suppression
     if (type === 'number') {
       // Permet les valeurs vides ou les nombres valides
-      if (value === '' || (!isNaN(value) && value !== '-')) {
+      if (value === '' || (!isNaN(Number(value)) && value !== '-')) {
         setFormData(prev => ({
           ...prev,
           [name]: value
@@ -30,12 +44,12 @@ export function TaxForm({ onSubmit, year }) {
     }
   };
 
-  const handleFocus = (e) => {
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => {
     // Sélectionne tout le contenu quand on clique dans le champ pour faciliter la saisie
     e.target.select();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit({
       netIncome: parseFloat(formData.netIncome) || 0,

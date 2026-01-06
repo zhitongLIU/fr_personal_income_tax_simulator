@@ -1,35 +1,27 @@
-import { taxBrackets, decoteLimits, familyQuotientCeiling, calculateFamilyParts } from '../data/taxBrackets.js';
+import { taxBrackets, decoteLimits, familyQuotientCeiling, calculateFamilyParts } from '../data/taxBrackets';
+import type { TaxBracket, MaritalStatus, TaxCalculationParams, TaxCalculationResult, TaxByBracketDetail } from '../types';
 
 /**
  * Calcule le revenu imposable
- * @param {number} netIncome - Revenu net annuel
- * @param {number} deductions - Abattements (optionnel)
- * @returns {number} Revenu imposable
  */
-export function calculateTaxableIncome(netIncome, deductions = 0) {
+export function calculateTaxableIncome(netIncome: number, deductions: number = 0): number {
   return Math.max(0, netIncome - deductions);
 }
 
 /**
  * Calcule le nombre de parts fiscales
- * @param {string} maritalStatus - 'single' ou 'married'
- * @param {number} numberOfChildren - Nombre d'enfants à charge
- * @returns {number} Nombre de parts
  */
-export function calculateFamilyQuotient(maritalStatus, numberOfChildren) {
+export function calculateFamilyQuotient(maritalStatus: MaritalStatus, numberOfChildren: number): number {
   return calculateFamilyParts(maritalStatus, numberOfChildren);
 }
 
 /**
  * Calcule le détail de l'impôt par tranche
- * @param {number} amount - Montant à imposer
- * @param {Array} brackets - Barème d'imposition
- * @returns {Array} Détail par tranche avec montant imposable et impôt
  */
-export function calculateTaxByBracket(amount, brackets) {
+export function calculateTaxByBracket(amount: number, brackets: TaxBracket[]): TaxByBracketDetail[] {
   if (amount <= 0) return [];
   
-  const details = [];
+  const details: TaxByBracketDetail[] = [];
   let previousMax = 0;
   
   for (let i = 0; i < brackets.length; i++) {
@@ -67,18 +59,8 @@ export function calculateTaxByBracket(amount, brackets) {
  * Calcule l'impôt progressif sur un montant donné (barème progressif français)
  * Le barème français fonctionne par tranches : chaque tranche est imposée à son taux
  * sur la partie du revenu qui se trouve dans cette tranche
- * 
- * Exemple pour 29 821 € :
- * - Tranche 1 (0-11 497) : 11 497 € à 0% = 0 €
- * - Tranche 2 (11 498-29 315) : (29 315 - 11 497) = 17 818 € à 11% = 1 959,98 €
- * - Tranche 3 (29 316-29 821) : (29 821 - 29 315) = 506 € à 30% = 151,80 €
- * Total = 2 111,78 €
- * 
- * @param {number} amount - Montant à imposer
- * @param {Array} brackets - Barème d'imposition
- * @returns {number} Impôt calculé
  */
-export function calculateProgressiveTax(amount, brackets) {
+export function calculateProgressiveTax(amount: number, brackets: TaxBracket[]): number {
   if (amount <= 0) return 0;
   
   let tax = 0;
@@ -112,14 +94,16 @@ export function calculateProgressiveTax(amount, brackets) {
   return Math.round(tax * 100) / 100;
 }
 
+interface TaxWithQuotientResult {
+  baseTax: number;
+  taxAfterQuotient: number;
+  quotientFamilyAmount: number;
+}
+
 /**
  * Calcule l'impôt avec application du quotient familial
- * @param {number} taxableIncome - Revenu imposable
- * @param {number} parts - Nombre de parts fiscales
- * @param {Array} brackets - Barème d'imposition
- * @returns {Object} { baseTax, taxAfterQuotient, quotientFamilyAmount }
  */
-export function calculateTaxWithQuotient(taxableIncome, parts, brackets) {
+export function calculateTaxWithQuotient(taxableIncome: number, parts: number, brackets: TaxBracket[]): TaxWithQuotientResult {
   const quotientFamilyAmount = taxableIncome / parts;
   const baseTax = calculateProgressiveTax(quotientFamilyAmount, brackets);
   let taxAfterQuotient = baseTax * parts;
@@ -141,11 +125,8 @@ export function calculateTaxWithQuotient(taxableIncome, parts, brackets) {
 
 /**
  * Calcule la décote (réduction pour faibles revenus)
- * @param {number} tax - Impôt avant décote
- * @param {string} maritalStatus - 'single' ou 'married'
- * @returns {number} Montant de la décote
  */
-export function calculateDecote(tax, maritalStatus) {
+export function calculateDecote(tax: number, maritalStatus: MaritalStatus): number {
   const limit = maritalStatus === 'single' ? decoteLimits.single : decoteLimits.couple;
   
   if (tax >= limit) {
@@ -158,14 +139,6 @@ export function calculateDecote(tax, maritalStatus) {
 
 /**
  * Calcule l'impôt final avec toutes les réductions
- * @param {Object} params - Paramètres de calcul
- * @param {number} params.netIncome - Revenu net annuel
- * @param {string} params.maritalStatus - 'single' ou 'married'
- * @param {number} params.numberOfChildren - Nombre d'enfants
- * @param {number} params.deductions - Abattements
- * @param {number} params.taxReductions - Réductions d'impôt
- * @param {number} params.year - Année fiscale (2025 ou 2026)
- * @returns {Object} Résultat complet du calcul
  */
 export function calculateFinalTax({
   netIncome,
@@ -174,7 +147,7 @@ export function calculateFinalTax({
   deductions = 0,
   taxReductions = 0,
   year = 2025
-}) {
+}: TaxCalculationParams): TaxCalculationResult {
   // 1. Revenu imposable
   const taxableIncome = calculateTaxableIncome(netIncome, deductions);
   
@@ -198,7 +171,7 @@ export function calculateFinalTax({
   
   // Taux marginal : trouver la tranche la plus élevée dans laquelle se trouve le quotient familial
   let marginalRate = 0;
-  let marginalBracket = null;
+  let marginalBracket: TaxBracket | null = null;
   for (let i = brackets.length - 1; i >= 0; i--) {
     if (quotientFamilyAmount > brackets[i].min - 1) {
       marginalRate = brackets[i].rate * 100;
@@ -227,7 +200,6 @@ export function calculateFinalTax({
     taxReductions: Math.round(taxReductions * 100) / 100,
     finalTax: Math.round(finalTax * 100) / 100,
     maritalStatus: maritalStatus,
-    // Nouvelles métriques
     averageTaxRate: Math.round(averageTaxRate * 100) / 100,
     marginalRate: Math.round(marginalRate * 100) / 100,
     marginalBracket: marginalBracket,
@@ -235,7 +207,6 @@ export function calculateFinalTax({
     effectiveTaxRate: Math.round(effectiveTaxRate * 100) / 100,
     netIncome: Math.round(netIncome * 100) / 100,
     taxByBracket: taxByBracketDetails,
-    maritalStatus: maritalStatus,
     numberOfChildren: numberOfChildren
   };
 }
