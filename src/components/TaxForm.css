@@ -1,0 +1,106 @@
+.tax-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.tax-form h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.required {
+  color: #d32f2f;
+}
+
+.form-group input[type="number"],
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.form-group input[type="number"]:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+}
+
+.form-help {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #555;
+  line-height: 1.6;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-left: 3px solid #0066cc;
+  border-radius: 4px;
+}
+
+.form-help strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.help-list {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.help-list li {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.help-list li strong {
+  color: #0066cc;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  background: #0066cc;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submit-button:hover {
+  background: #0052a3;
+}
+
+.submit-button:active {
+  background: #004080;
+}
+
+@media (max-width: 768px) {
+  .tax-form {
+    padding: 1.5rem;
+  }
+}
+
