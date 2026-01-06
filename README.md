@@ -47,15 +47,20 @@ npm run build
 tax_simulator/
 ├── src/
 │   ├── components/          # Composants React
-│   │   ├── TaxForm.jsx      # Formulaire de saisie
-│   │   ├── TaxResults.jsx   # Affichage des résultats
-│   │   └── YearSelector.jsx # Sélecteur d'année
+│   │   ├── TaxForm.tsx      # Formulaire de saisie
+│   │   ├── TaxResults.tsx   # Affichage des résultats
+│   │   └── YearSelector.tsx # Sélecteur d'année
 │   ├── data/
-│   │   └── taxBrackets.js   # Barèmes fiscaux
+│   │   └── taxBrackets.ts   # Barèmes fiscaux
 │   ├── services/
-│   │   └── taxCalculator.js # Logique de calcul
-│   ├── App.jsx              # Composant principal
-│   └── main.jsx             # Point d'entrée
+│   │   └── taxCalculator.ts # Logique de calcul
+│   ├── types/
+│   │   └── index.ts         # Types TypeScript
+│   ├── App.tsx              # Composant principal
+│   ├── main.tsx             # Point d'entrée
+│   └── index.css            # Styles Tailwind CSS
+├── tailwind.config.js       # Configuration Tailwind
+├── tsconfig.json            # Configuration TypeScript
 └── package.json
 ```
 
@@ -94,7 +99,7 @@ Formule : Décote = Plafond - (0.75 × Impôt)
 - React 19
 - TypeScript
 - Vite
-- CSS3
+- Tailwind CSS
 
 ## Déploiement sur GitHub Pages
 
